@@ -62,9 +62,22 @@ public class HelloController implements Initializable {
 
         double rA = sliderA.getValue();
 
-        double r3 = (sliderB.getValue() - sliderA.getValue());
+        double r3 = ((sliderB.getValue() - sliderA.getValue()) / 2);
         double fi = 360 / 7;
 
+
+
+        double s = Math.PI * (rB * rB) - ((Math.PI * (r3*r3) * 7) + (Math.PI * (rA * rA)));
+        System.out.println(s);
+        if (rB == rA) {
+            sliderB.setValue(sliderA.getValue() + 1);
+
+            if (rB <= 0 || rB > 100){
+                sliderB.setValue(10);
+            }else if (rA <= 0 || rA > 100){
+                sliderA.setValue(3.25);
+            }
+        }
         ctx.setFill(rgb(179, 0, 0));
         ctx.fillOval(0 - rB, 0 - rB, rB * 2, rB * 2);
 
@@ -73,18 +86,18 @@ public class HelloController implements Initializable {
 
         int i = 1;
         do {
-            ctx.fillOval((knowX(((rB - rA)), fi * i) - r3 / 2), knowY(((rB - rA )),fi * i)  - r3 / 2, r3, r3);
+            ctx.fillOval((knowX(((rA + r3)), fi * i) - (r3 / 2)), (knowY(((rA + r3)),fi * i))  - (r3 / 2), r3, r3);
             i++;
         }while (i < 8);
-
-        if (rA > rB || rA == rB){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Ошибка ввода");
-            alert.setHeaderText("Вы вышли за пределы диапазона!");
-            alert.showAndWait();
-            sliderA.setValue(3.25);
-            sliderB.setValue(10);
-        }
+//
+//        if (rA > rB || rA == rB){
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//            alert.setTitle("Ошибка ввода");
+//            alert.setHeaderText("Вы вышли за пределы диапазона!");
+//            alert.showAndWait();
+//            sliderA.setValue(3.25);
+//            sliderB.setValue(10);
+//        }
 
         ctx.restore(); //Восстановление матрцицы преобразований
     }
