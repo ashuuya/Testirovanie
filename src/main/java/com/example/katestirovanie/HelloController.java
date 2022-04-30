@@ -58,17 +58,20 @@ public class HelloController implements Initializable {
         transform.appendScale(zoom, zoom);
         ctx.setTransform(transform);
 
+        //задаём радиус большой красной окружности
         double rB = sliderB.getValue();
 
+        //задаём радиус центральной чёрной окружности
         double rA = sliderA.getValue();
 
+        //вычисляем радиус 7 мелких внутренних окружностей
         double r3 = ((sliderB.getValue() - sliderA.getValue()) / 2);
+        //вычисляем угол для расчётов координат 7 кругов
         double fi = 360 / 7;
-
-
 
         double s = Math.PI * (rB * rB) - ((Math.PI * (r3*r3) * 7) + (Math.PI * (rA * rA)));
         System.out.println(s);
+
         if (rB == rA) {
             sliderB.setValue(sliderA.getValue() + 1);
 
@@ -86,20 +89,20 @@ public class HelloController implements Initializable {
 
         int i = 1;
         do {
-            ctx.fillOval((knowX(((rA + r3)), fi * i) - (r3 / 2)), (knowY(((rA + r3)),fi * i))  - (r3 / 2), r3, r3);
+            ctx.fillOval((knowX(((rA + r3)), fi * i) - r3), (knowY(((rA + r3)),fi * i))  - r3, r3 * 2, r3 * 2);
             i++;
         }while (i < 8);
-//
-//        if (rA > rB || rA == rB){
-//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//            alert.setTitle("Ошибка ввода");
-//            alert.setHeaderText("Вы вышли за пределы диапазона!");
-//            alert.showAndWait();
-//            sliderA.setValue(3.25);
-//            sliderB.setValue(10);
-//        }
 
-        ctx.restore(); //Восстановление матрцицы преобразований
+        if (rA > rB || rA == rB || s < 0){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Ошибка ввода.");
+            alert.setHeaderText("Вы вышли за пределы диапазона!");
+            alert.showAndWait();
+            sliderA.setValue(3.25);
+            sliderB.setValue(10);
+        }
+
+        ctx.restore(); //Восстановление матрицы преобразований
     }
 
     public double knowX(double acr, double fi){
