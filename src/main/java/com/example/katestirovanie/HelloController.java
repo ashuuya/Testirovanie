@@ -28,6 +28,10 @@ public class HelloController implements Initializable {
     public Slider sliderA;
     public Slider sliderB;
     public Slider sliderZ;
+    public Label aValue;
+    public Label bValue;
+    public Label cValue;
+    public Label sValue;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -65,12 +69,23 @@ public class HelloController implements Initializable {
         double rA = sliderA.getValue();
 
         //вычисляем радиус 7 мелких внутренних окружностей
-        double r3 = ((sliderB.getValue() - sliderA.getValue()) / 2);
+        double rC = ((rB - rA) / 2);
+
+        double s;
+
         //вычисляем угол для расчётов координат 7 кругов
         double fi = 360 / 7;
 
-        double s = Math.PI * (rB * rB) - ((Math.PI * (r3*r3) * 7) + (Math.PI * (rA * rA)));
-        System.out.println(s);
+        if (rC > 0){
+            s = Math.PI * (rB * rB) - ((Math.PI * (rC*rC) * 7) + (Math.PI * (rA * rA)));
+        }
+        else{
+            s = Math.PI * (rB * rB) - ((Math.PI * 0 * 7) + (Math.PI * (rA * rA)));
+        }
+        aValue.setText(""+rA);
+        bValue.setText(""+rB);
+        cValue.setText(""+rC);
+        sValue.setText(""+s);
 
         if (rB == rA) {
             sliderB.setValue(sliderA.getValue() + 1);
@@ -89,18 +104,23 @@ public class HelloController implements Initializable {
 
         int i = 1;
         do {
-            ctx.fillOval((knowX(((rA + r3)), fi * i) - r3), (knowY(((rA + r3)),fi * i))  - r3, r3 * 2, r3 * 2);
+            ctx.fillOval((knowX(((rA + rC)), fi * i) - rC), (knowY(((rA + rC)),fi * i))  - rC, rC * 2, rC * 2);
             i++;
         }while (i < 8);
 
-        if (rA > rB || rA == rB || s < 0){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Ошибка ввода.");
-            alert.setHeaderText("Вы вышли за пределы диапазона!");
-            alert.showAndWait();
-            sliderA.setValue(3.25);
-            sliderB.setValue(10);
+        if (rC <= 0 || s <= 0){
+
+            sValue.setText("Невозможно корректно посчитать площадь!");
+            cValue.setText("0.00");
         }
+//        if(rC * 2 > rA){
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//            alert.setTitle("Ошибка ввода.");
+//            alert.setHeaderText("Вы вышли за пределы диапазона!");
+//            alert.showAndWait();
+//            sliderA.setValue(3.25);
+//            sliderB.setValue(10);
+//        }
 
         ctx.restore(); //Восстановление матрицы преобразований
     }
