@@ -15,7 +15,7 @@ public class HelloApplication extends Application {
         stage.setTitle("MANGEKYOU");
         stage.setScene(scene);
         stage.show();
-        stage.setResizable(false);
+//        stage.setResizable(false);
     }
 
     public static void main(String[] args) {
