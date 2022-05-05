@@ -61,16 +61,14 @@ public class HelloController implements Initializable {
         double rC = ((rB - rA) / 2);
 
         double s;
+        int o = 7;
 
-        //вычисляем угол для расчётов координат 7 кругов
-        double fi = 360 / 7;
-
-        s = knowS(rB, rC, rA);
+        s = knowS(rB, rC, rA, o);
 
         aValue.setText(""+rA);
         bValue.setText(""+rB);
         cValue.setText(""+rC);
-        sValue.setText(""+s);
+        sValue.setText(s+" см кв.");
 
         if (rB == rA) {
             sliderB.setValue(sliderA.getValue() + 1);
@@ -87,14 +85,13 @@ public class HelloController implements Initializable {
         ctx.setFill(Color.BLACK);
         ctx.fillOval(0 - rA, 0 - rA, rA * 2, rA * 2);
 
-        int i = 1;
-        do {
-            ctx.fillOval((knowX(((rA + rC)), fi * i) - rC), (knowY(((rA + rC)),fi * i))  - rC, rC * 2, rC * 2);
-            i++;
-        }while (i < 8);
+        try{
+            drawArcsAround(ctx, rA, rC, rB, o);
+        }catch (Exception e ){
+            System.out.println(e);
+        };
 
         if (rC <= 0 || s <= 0){
-
             sValue.setText("Невозможно корректно посчитать площадь!");
             cValue.setText("0.00");
         }
@@ -108,12 +105,26 @@ public class HelloController implements Initializable {
     public double knowY(double acr, double fi){
         return acr * Math.sin(Math.toRadians(fi));
     }
-    public double knowS(double rB, double rC, double rA){
+    public double knowS(double rB, double rC, double rA, int o){
         if (rC > 0){
-            return Math.PI * (rB * rB) - ((Math.PI * (rC*rC) * 7) + (Math.PI * (rA * rA)));
+            return Math.PI * (rB * rB) - ((Math.PI * (rC*rC) * o) + (Math.PI * (rA * rA)));
         }
         else{
-            return Math.PI * (rB * rB) - ((Math.PI * 0 * 7) + (Math.PI * (rA * rA)));
+            return Math.PI * (rB * rB) - ((Math.PI * 0 * o) + (Math.PI * (rA * rA)));
+        }
+    }
+
+    public void drawArcsAround(GraphicsContext ctx, double rA, double rC, double rB, int circlesCount) throws Exception {
+        if (rA < 0 || rB < 0 || rC < 0) {
+            throw new Exception("Ошибка, радиусы должны быть положительными числами");
+        }
+        if (circlesCount < 1) {
+            throw new Exception("Ошибка, количество должно быть больше 0");
+        }
+
+        double fi = 360 / circlesCount;
+        for (int i = 0; i < circlesCount; i++) {
+            ctx.fillOval((knowX(((rA + rC)), fi * i) - rC), (knowY(((rA + rC)), fi * i)) - rC, rC * 2, rC * 2);
         }
     }
 }
